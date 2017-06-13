@@ -11,20 +11,16 @@ import static org.elsys.chat.constants.References.ANSI_RESET;
 //delete id
 //update id
 //read all/id
-public class User {
+public class User extends ModelStructure {
 
-    public static int create(String name) {
+    public User(Connection con) {
+        super(con);
+    }
+
+    @Override
+    public int create(String name) {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            String connectionString = "jdbc:mysql://localhost/CodedChat?useSSL=false";
-            Connection con = DriverManager.getConnection(connectionString, "root", "cyan#BesT0color");
-
-            PreparedStatement query = con.prepareStatement("INSERT INTO Users(Id, Name) VALUES(?,?)");
+            PreparedStatement query = getConnection().prepareStatement("INSERT INTO Users(Id, Name) VALUES(?,?)");
             query.setNull(1, Types.INTEGER);
             query.setString(2, name);
 
@@ -38,18 +34,10 @@ public class User {
         }
     }
 
-    public static void read(int id) {
+    @Override
+    public void read(int id) {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            String connectionString = "jdbc:mysql://localhost/CodedChat?useSSL=false";
-            Connection con = DriverManager.getConnection(connectionString, "root", "cyan#BesT0color");
-
-            PreparedStatement query = con.prepareStatement("SELECT Id, Name FROM Users WHERE Id=?");
+            PreparedStatement query = getConnection().prepareStatement("SELECT Id, Name FROM Users WHERE Id=?");
             query.setInt(1, id);
             ResultSet result = query.executeQuery();
 
@@ -63,18 +51,10 @@ public class User {
         }
     }
 
-    public static void readAll() {
+    @Override
+    public void readAll() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            String connectionString = "jdbc:mysql://localhost/CodedChat?useSSL=false";
-            Connection con = DriverManager.getConnection(connectionString, "root", "cyan#BesT0color");
-
-            PreparedStatement query = con.prepareStatement("SELECT * FROM Users");
+            PreparedStatement query = getConnection().prepareStatement("SELECT * FROM Users");
             ResultSet result = query.executeQuery();
 
             while(result.next()) {
@@ -85,19 +65,10 @@ public class User {
         }
     }
 
-
-    public static int update(int id, String newName) {
+    @Override
+    public int update(int id, String newName) {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            String connectionString = "jdbc:mysql://localhost/CodedChat?useSSL=false";
-            Connection con = DriverManager.getConnection(connectionString, "root", "cyan#BesT0color");
-
-            PreparedStatement query = con.prepareStatement("UPDATE Users SET Name=? WHERE Id=?");
+            PreparedStatement query = getConnection().prepareStatement("UPDATE Users SET Name=? WHERE Id=?");
             query.setString(1, newName);
             query.setInt(2, id);
 
@@ -110,18 +81,10 @@ public class User {
         }
     }
 
-    public static int delete(int id) {
+    @Override
+    public int delete(int id) {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            String connectionString = "jdbc:mysql://localhost/CodedChat?useSSL=false";
-            Connection con = DriverManager.getConnection(connectionString, "root", "cyan#BesT0color");
-
-            PreparedStatement query = con.prepareStatement("DELETE FROM Users WHERE Id=?");
+            PreparedStatement query = getConnection().prepareStatement("DELETE FROM Users WHERE Id=?");
             query.setInt(1, id);
 
             int affectedRows = query.executeUpdate();
