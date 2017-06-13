@@ -14,7 +14,8 @@ public abstract class ModelStructure {
         return con;
     }
 
-    public abstract int create(String name);
+
+    public abstract int create(String... params);
 
     public abstract void read(int id);
 

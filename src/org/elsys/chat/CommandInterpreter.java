@@ -52,20 +52,29 @@ public class CommandInterpreter implements Runnable {
             while ((line = buffer.readLine()) != null) {
                 if (line.equals("end")) break;
 
+                //check to which table changes should be made
+                ModelStructure model = user;
+                if (line.contains("user")) model = user;
+                else if (line.contains("m-type")) model = messageType;
 
-                if (line.contains("user")) {
-                    if (line.contains("read")) {
-                        switch (line.substring(line.lastIndexOf(" ")+1)) {
-                            case "all": user.readAll(); break;
-                            default: user.read(Integer.parseInt(line.substring(line.lastIndexOf(" ")+1))); break;
-                        }
+
+                //choose operation to be executed
+                if (line.contains("read")) {
+                    switch (line.substring(line.lastIndexOf(" ")+1)) {
+                        case "all": model.readAll(); break;
+                        default: model.read(Integer.parseInt(line.substring(line.lastIndexOf(" ")+1))); break;
                     }
-                    else if (line.contains("update")) user.update
-                            (Integer.parseInt(line.trim().substring(12, line.lastIndexOf(" "))),
-                                    line.trim().substring(line.lastIndexOf(" ")+1)); //for now only works with one word names
-                    else if (line.contains("create")) user.create(line.substring(12).trim());
-                    else if (line.contains("delete")) user.delete(Integer.parseInt(line.substring(12).trim()));
                 }
+                else if (line.contains("update")) {
+                    model.update(Integer.parseInt(line.trim().substring(12, line.lastIndexOf(" "))),
+                            line.trim().substring(line.lastIndexOf(" ")+1)); //for now only works with one word names
+                }
+                else if (line.contains("create")) {
+                    System.out.println(line.substring(14).trim()); //12 for user, put regex
+                    //put second argument for m-type
+                    model.create(line.substring(14).trim());
+                }
+                else if (line.contains("delete")) model.delete(Integer.parseInt(line.substring(12).trim()));
 
             }
 

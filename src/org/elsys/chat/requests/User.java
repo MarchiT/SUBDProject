@@ -18,7 +18,8 @@ public class User extends ModelStructure {
     }
 
     @Override
-    public int create(String name) {
+    public int create(String... params) {
+        String name = params[0];
         try {
             PreparedStatement query = getConnection().prepareStatement("INSERT INTO Users(Id, Name) VALUES(?,?)");
             query.setNull(1, Types.INTEGER);
