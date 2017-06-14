@@ -1,10 +1,7 @@
 package org.elsys.chat.requests;
 
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static org.elsys.chat.constants.References.ANSI_BLUE;
 import static org.elsys.chat.constants.References.ANSI_RESET;
@@ -17,12 +14,42 @@ public class Solutions extends ModelStructure {
 
     @Override
     public int create(String... params) {
-        return 0;
+        String decodedText = params[0];
+        int userId = Integer.parseInt(params[1]);
+        int messageId = Integer.parseInt(params[2]);
+
+        try {
+            PreparedStatement query = getConnection().prepareStatement("INSERT INTO Solutions VALUES(?,?,?,?)");
+            query.setNull(1, Types.INTEGER);
+            query.setString(2, decodedText);
+            query.setInt(3, userId);
+            query.setInt(4, messageId);
+
+            int affectedRows = query.executeUpdate();
+            System.out.println(ANSI_BLUE + "Solution to message \'" + messageId + "\' from user:\'" + userId + "\' created!" + ANSI_RESET);
+            return affectedRows;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     @Override
-    public int update(int id, String newName) {
-        return 0;
+    public int update(int id, String... params) {
+        String newText = params[0];
+        try {
+            PreparedStatement query = getConnection().prepareStatement("UPDATE Solutions SET DecodedText=? WHERE Id=?");
+            query.setString(1, newText);
+            query.setInt(2, id);
+
+            int affectedRows = query.executeUpdate();
+            System.out.println(ANSI_BLUE + "Solution is successfully updated!" + ANSI_RESET);
+            return affectedRows;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
 
@@ -35,9 +62,12 @@ public class Solutions extends ModelStructure {
             ResultSet result = query.executeQuery();
 
             while(result.next()) {
-                String name = result.getString("DecodedText");
+                String text = result.getString("DecodedText");
+                String userId = result.getString("UserId");
+                String messageId = result.getString("MessageId");
 
-//                System.out.println(ANSI_BLUE + "For id \'" + id + "\' user name is: " + name + ANSI_RESET);
+                System.out.println(ANSI_BLUE + "For id \'" + id + "\' message id is: " + messageId +
+                        " user id: "  + userId + " text: " + text + ANSI_RESET);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,7 +81,13 @@ public class Solutions extends ModelStructure {
             ResultSet result = query.executeQuery();
 
             while(result.next()) {
-//                System.out.println("Id: " + result.getInt("Id") + " Name: " + result.getString("Name"));
+                int id = result.getInt("Id");
+                String text = result.getString("DecodedText");
+                String userId = result.getString("UserId");
+                String messageId = result.getString("MessageId");
+
+                System.out.println(ANSI_BLUE + "Id:" + id + " MessageId: " + messageId +
+                        " UserId: "  + userId + " Text: " + text + ANSI_RESET);
             }
         } catch (SQLException e) {
             e.printStackTrace();

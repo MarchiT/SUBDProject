@@ -67,7 +67,8 @@ public class User extends ModelStructure {
     }
 
     @Override
-    public int update(int id, String newName) {
+    public int update(int id, String... params) {
+        String newName = params[0];
         try {
             PreparedStatement query = getConnection().prepareStatement("UPDATE Users SET Name=? WHERE Id=?");
             query.setString(1, newName);

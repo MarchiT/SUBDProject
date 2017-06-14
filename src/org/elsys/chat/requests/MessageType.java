@@ -55,7 +55,7 @@ public class MessageType extends ModelStructure{
             while(result.next()) {
                 String name = result.getString("Name");
 
-                System.out.println(ANSI_BLUE + "For id \'" + id + "\' user name is: " + name + ANSI_RESET);
+                System.out.println(ANSI_BLUE + "For id \'" + id + "\' message type is: " + name + ANSI_RESET);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -78,7 +78,8 @@ public class MessageType extends ModelStructure{
     }
 
     @Override
-    public int update(int id, String newName) {
+    public int update(int id, String... params) {
+        String newName = params[0];
         try {
             PreparedStatement query = getConnection().prepareStatement("UPDATE MessageTypes SET Name=? WHERE Id=?");
             query.setString(1, newName);

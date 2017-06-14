@@ -21,7 +21,7 @@ public abstract class ModelStructure {
 
     public abstract void readAll();
 
-    public abstract int update(int id, String newName);
+    public abstract int update(int id, String... params);
 
     public abstract int delete(int id);
 }
