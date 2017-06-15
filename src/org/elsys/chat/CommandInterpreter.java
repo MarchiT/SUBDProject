@@ -1,7 +1,7 @@
 package org.elsys.chat;
 
-import com.sun.xml.internal.ws.api.message.Message;
 import org.elsys.chat.constants.MetaData;
+import org.elsys.chat.constants.Tables;
 import org.elsys.chat.requests.*;
 
 import java.io.BufferedReader;
@@ -56,8 +56,10 @@ public class CommandInterpreter implements Runnable {
 
                 //check to which table changes should be made
                 ModelStructure model = user;
-                if (line.contains("user")) model = user;
-                else if (line.contains("m-type")) model = messageType;
+                if (line.contains(Tables.USER)) model = user;
+                else if (line.contains(Tables.TYPE_MESSAGE)) model = messageType;
+                else if (line.contains(Tables.MESSAGE)) model = messages;
+                else if (line.contains(Tables.SOLUTION)) model = solutions;
 
 
                 //choose operation to be executed
@@ -67,28 +69,49 @@ public class CommandInterpreter implements Runnable {
                         default: model.read(Integer.parseInt(line.substring(line.lastIndexOf(" ")+1))); break;
                     }
                 }
-                else if (line.contains("delete")) model.delete(Integer.parseInt(line.substring(12).trim()));
+                else if (line.contains("delete")) {
+                    Pattern pattern = Pattern.compile("([\\w-]+)\\s+delete\\s+(\\d+)");
+                    Matcher matcher = pattern.matcher(line);
+
+                    if (matcher.find()) model.delete(Integer.parseInt(matcher.group(2)));
+                }
 
                 else if (line.contains("update")) {
-                    model.update(Integer.parseInt(line.trim().substring(12, line.lastIndexOf(" "))),
-                            line.trim().substring(line.lastIndexOf(" ")+1)); //for now only works with one word names
+                    Pattern pattern = Pattern.compile("\\w+\\s+\\w+\\s+(\\d+)\\s+(.+)");
+                    Matcher matcher = pattern.matcher(line);
+
+                    if (matcher.find())
+                    model.update(Integer.parseInt(matcher.group(1)), matcher.group(2));
                 }
                 else if (line.contains("create")) {
-                    Pattern pattern = Pattern.compile("");
-                    if (model instanceof User) pattern = Pattern.compile("");
-                    else if (model instanceof MessageType) pattern = Pattern.compile("");
-                    else if (model instanceof Messages) pattern = Pattern.compile("");
-                    else if (model instanceof Solutions) pattern = Pattern.compile("");
+                    Pattern pattern;
+                    if (model instanceof User || model instanceof MessageType)
+                            pattern = Pattern.compile("([\\w-]+)\\s+\\w+\\s+(\\d+)?\\s*([\\w\\s]*?)$");
+                    else if (model instanceof Messages || model instanceof Solutions)
+                        pattern = Pattern.compile("(\\w+)\\s+\\w+\\s+(\\d+)\\s+(\\d+)\\s+(\\[([\\w-]+)\\])?\\s*(.+)(\\d+)?$");
+                    else
+                        continue;
 
                     Matcher matcher = pattern.matcher(line);
 
                     while (matcher.find()) {
-                        //matcher.group(2);
+                        switch (matcher.group(1)) {
+                            case Tables.USER:
+                                model.create(matcher.group(2));
+                                break;
+                            case Tables.TYPE_MESSAGE:
+                                if (matcher.group(2) == null) model.create(matcher.group(3));
+                                else model.create(matcher.group(3), matcher.group(2));
+                                break;
+                            case Tables.MESSAGE:
+                                if (matcher.group(4) == null) model.create(matcher.group(2), matcher.group(3), matcher.group(6));
+                                else model.create(matcher.group(2), matcher.group(3), matcher.group(6), matcher.group(5));
+                                break;
+                            case Tables.SOLUTION:
+                                model.create(matcher.group(2), matcher.group(3), matcher.group(6));
+                                break;
+                        }
                     }
-
-                    //System.out.println(line.substring(14).trim()); //12 for user, put regex
-                    //put second argument for m-type
-                    model.create(line.substring(14).trim());
                 }
 
             }

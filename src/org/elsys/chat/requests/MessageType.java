@@ -69,8 +69,9 @@ public class MessageType extends ModelStructure{
             ResultSet result = query.executeQuery();
 
             while(result.next()) {
-                System.out.println("Id: " + result.getInt("Id") + " Name: " + result.getString("Name") + " Creator Id: " +
-                        (result.getInt("CreatorUserId") == NULL ? "not specified" : result.getInt("CreatorUserId")));
+                System.out.format("Id: %-3d CreatorId: %-13s, Name: %s\n", result.getInt("Id"),
+                        (result.getInt("CreatorUserId") == NULL ? "not specified" : result.getInt("CreatorUserId")),
+                        result.getString("Name"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

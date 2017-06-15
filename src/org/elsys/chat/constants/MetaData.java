@@ -31,4 +31,12 @@ public class MetaData {
 
         System.out.println();
     }
+
+//    m-type update 10 something else
+
+//    user create philip look
+//    m-type create morse 2
+//    m create 1 1 [date] textty texy bla
+//    solution create 1 1 this is the decoded text
+
 }

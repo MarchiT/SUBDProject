@@ -14,25 +14,25 @@ public class Messages extends ModelStructure {
 
     @Override
     public int create(String... params) {
-        String text = params[0];
-        int toUserId = Integer.parseInt(params[1]);
-        int messageId = Integer.parseInt(params[2]);
+        int toUserId = Integer.parseInt(params[0]);
+        int typeId = Integer.parseInt(params[1]);
+        String text = params[2];
 
         try {
-            PreparedStatement query = getConnection().prepareStatement("INSERT INTO Messages VALUES(?,?,?,?)");
+            PreparedStatement query = getConnection().prepareStatement("INSERT INTO Messages VALUES(?,?,?,?,?)");
             query.setNull(1, Types.INTEGER);
             query.setString(2, text);
             query.setInt(4, toUserId);
-            query.setInt(5, messageId);
+            query.setInt(5, typeId);
 
-            if (params.length > 3) {
-                query.setInt(3, Integer.parseInt(params[1]));
+            if (params.length == 4) {
+                query.setDate(3, java.sql.Date.valueOf(params[3]));
             } else {
                 query.setNull(3, Types.INTEGER);
             }
 
             int affectedRows = query.executeUpdate();
-            System.out.println(ANSI_BLUE + "Message Id \'" + messageId + "\' to user:\'" + toUserId + "\' created!" + ANSI_RESET);
+            System.out.println(ANSI_BLUE + "Message to typeId \'" + typeId + "\' to user \'" + toUserId + "\' created!" + ANSI_RESET);
             return affectedRows;
 
         } catch (SQLException e) {

@@ -14,9 +14,9 @@ public class Solutions extends ModelStructure {
 
     @Override
     public int create(String... params) {
-        String decodedText = params[0];
-        int userId = Integer.parseInt(params[1]);
-        int messageId = Integer.parseInt(params[2]);
+        String decodedText = params[2];
+        int userId = Integer.parseInt(params[0]);
+        int messageId = Integer.parseInt(params[1]);
 
         try {
             PreparedStatement query = getConnection().prepareStatement("INSERT INTO Solutions VALUES(?,?,?,?)");
@@ -26,7 +26,7 @@ public class Solutions extends ModelStructure {
             query.setInt(4, messageId);
 
             int affectedRows = query.executeUpdate();
-            System.out.println(ANSI_BLUE + "Solution to message \'" + messageId + "\' from user:\'" + userId + "\' created!" + ANSI_RESET);
+            System.out.println(ANSI_BLUE + "Solution to message \'" + messageId + "\' from user \'" + userId + "\' created!" + ANSI_RESET);
             return affectedRows;
 
         } catch (SQLException e) {
@@ -86,7 +86,7 @@ public class Solutions extends ModelStructure {
                 String userId = result.getString("UserId");
                 String messageId = result.getString("MessageId");
 
-                System.out.println(ANSI_BLUE + "Id:" + id + " MessageId: " + messageId +
+                System.out.println(ANSI_BLUE + "Id: " + id + " MessageId: " + messageId +
                         " UserId: "  + userId + " Text: " + text + ANSI_RESET);
             }
         } catch (SQLException e) {
