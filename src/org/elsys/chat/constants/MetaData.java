@@ -1,42 +1,49 @@
 package org.elsys.chat.constants;
 
-import static org.elsys.chat.constants.References.ANSI_RESET;
-import static org.elsys.chat.constants.References.ANSI_YELLOW;
+import static org.elsys.chat.constants.Colors.*;
 
 public class MetaData {
 
     public static void print_instructions() {
         System.out.println(ANSI_YELLOW + "INSTRUCTIONS" + ANSI_RESET);
-        //say briefly what is the app about
 
         //Create
-        System.out.println("user create <name>: for creating a new user");
-        System.out.println("create message_type <name> [creator user id]: for creating a new message type");
-        System.out.println("create message <text> <to user id> <type id> [uploaded date]: for creating a new possible solution to a message");
-        System.out.println("create solution <text> <user id> <message id>: for creating a new message");
+        display("user", "create", "<name>");
+        display("m-type", "create", "[creator id] <type name>");
+        display("m", "create", "<user id> <type id> [[date]] <text>");
+        display("s", "create", "<user id> <message id> <text>");
         System.out.println();
 
         //Read
-        System.out.println("user read <id>: reads the user with the selected id");
-        System.out.println("user read all: for printing all registered users");
+        display("user", "read", "<id>/all");
+        display("m-type", "read", "<id>/all");
+        display("m", "read", "<id>/all");
+        display("s", "read", "<id>/all");
         System.out.println();
 
         //Update
-        System.out.println("user update <id> <new name>");
+        display("user", "update", "<id> <new username>");
+        display("m-type", "update", "<id> <new type name>");
+        display("m", "update", "<id> <new message text>");
+        display("s", "update", "<id> <new translation>");
         System.out.println();
 
         //Delete
-        System.out.println("user delete <id>");
+        display("user", "delete", "<id>");
+        display("m-type", "delete", "<id>");
+        display("m", "delete", "<id>");
+        display("s", "delete", "<id>");
         System.out.println();
 
+        //End the program
+        System.out.println(ANSI_RED + "end" + ANSI_RESET + " - stops the program");
+        System.out.println(ANSI_YELLOW + "-------------------------" + ANSI_RESET);
+        System.out.println();
         System.out.println();
     }
 
-//    m-type update 10 something else
-
-//    user create philip look
-//    m-type create morse 2
-//    m create 1 1 [date] textty texy bla
-//    solution create 1 1 this is the decoded text
+    private static void display(String table, String operation, String params) {
+        System.out.format("%s%-6s%s%s %s%s %s\n", ANSI_PURPLE, table, ANSI_RESET, ANSI_RED, operation, ANSI_RESET, params);
+    }
 
 }

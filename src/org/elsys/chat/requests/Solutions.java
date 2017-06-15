@@ -3,8 +3,8 @@ package org.elsys.chat.requests;
 
 import java.sql.*;
 
-import static org.elsys.chat.constants.References.ANSI_BLUE;
-import static org.elsys.chat.constants.References.ANSI_RESET;
+import static org.elsys.chat.constants.Colors.ANSI_BLUE;
+import static org.elsys.chat.constants.Colors.ANSI_RESET;
 
 public class Solutions extends ModelStructure {
 
@@ -86,8 +86,8 @@ public class Solutions extends ModelStructure {
                 String userId = result.getString("UserId");
                 String messageId = result.getString("MessageId");
 
-                System.out.println(ANSI_BLUE + "Id: " + id + " MessageId: " + messageId +
-                        " UserId: "  + userId + " Text: " + text + ANSI_RESET);
+                System.out.println("Id: " + id + " MessageId: " + messageId +
+                        " UserId: "  + userId + " Text: " + text);
             }
         } catch (SQLException e) {
             e.printStackTrace();

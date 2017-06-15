@@ -52,15 +52,15 @@ public class CommandInterpreter implements Runnable {
 
             String line;
             while ((line = buffer.readLine()) != null) {
-                if (line.equals("end")) break;
+                if (line.toLowerCase().equals("end")) break;
 
                 //check to which table changes should be made
-                ModelStructure model = user;
+                ModelStructure model;
                 if (line.contains(Tables.USER)) model = user;
                 else if (line.contains(Tables.TYPE_MESSAGE)) model = messageType;
                 else if (line.contains(Tables.MESSAGE)) model = messages;
                 else if (line.contains(Tables.SOLUTION)) model = solutions;
-
+                else continue;
 
                 //choose operation to be executed
                 if (line.contains("read")) {
@@ -73,15 +73,15 @@ public class CommandInterpreter implements Runnable {
                     Pattern pattern = Pattern.compile("([\\w-]+)\\s+delete\\s+(\\d+)");
                     Matcher matcher = pattern.matcher(line);
 
-                    if (matcher.find()) model.delete(Integer.parseInt(matcher.group(2)));
+                    if (matcher.find())
+                        model.delete(Integer.parseInt(matcher.group(2)));
                 }
-
                 else if (line.contains("update")) {
                     Pattern pattern = Pattern.compile("\\w+\\s+\\w+\\s+(\\d+)\\s+(.+)");
                     Matcher matcher = pattern.matcher(line);
 
                     if (matcher.find())
-                    model.update(Integer.parseInt(matcher.group(1)), matcher.group(2));
+                        model.update(Integer.parseInt(matcher.group(1)), matcher.group(2));
                 }
                 else if (line.contains("create")) {
                     Pattern pattern;
@@ -97,7 +97,7 @@ public class CommandInterpreter implements Runnable {
                     while (matcher.find()) {
                         switch (matcher.group(1)) {
                             case Tables.USER:
-                                model.create(matcher.group(2));
+                                model.create(matcher.group(3));
                                 break;
                             case Tables.TYPE_MESSAGE:
                                 if (matcher.group(2) == null) model.create(matcher.group(3));

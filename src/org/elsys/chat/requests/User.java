@@ -3,8 +3,8 @@ package org.elsys.chat.requests;
 
 import java.sql.*;
 
-import static org.elsys.chat.constants.References.ANSI_BLUE;
-import static org.elsys.chat.constants.References.ANSI_RESET;
+import static org.elsys.chat.constants.Colors.ANSI_BLUE;
+import static org.elsys.chat.constants.Colors.ANSI_RESET;
 
 
 //create name
